@@ -1,0 +1,6 @@
+project(exer CXX)
+add_subdirectory(exer1)
+add_subdirectory(exer2)
+add_subdirectory(exer3)
+add_subdirectory(exer4)
+add_subdirectory(exer5)
