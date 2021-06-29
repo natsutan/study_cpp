@@ -5,38 +5,57 @@
 #include <iostream>
 #include <vector>
 #include <numeric>
+#include <unordered_map>
 
 std::vector<int> get_divisors(int x);
-void print_abundant(int x);
+int sum_of_divisors(int x);
+void print_amicable(int x);
+
+std::unordered_map<int, int> memo;
 
 int main(void)
 {
-    print_abundant(22);
+    memo.clear();
+    print_amicable(1000000);
 
 
     return 0;
 }
 
-void print_abundant(int x)
+void print_amicable(int x)
 {
-    for(int i=x;i>0;--i) {
-        auto divs = get_divisors(i);
-        int sum = std::accumulate(divs.begin(), divs.end(), 0);
+    for(int i=0;i<x;++i) {
+        int sum0 = sum_of_divisors(i);
+        int sum1 = sum_of_divisors(sum0);
+        //std::cout << i << "," << sum0 << "," << sum1 << std::endl;
 
-        if (sum > (i * 2)) {
-            std::cout << i;
-            break;
+        if((i == sum1) && (i != sum0) && (sum0 > sum1)) {
+            std::cout << "amicable! " << i << "," << sum0 << std::endl;
         }
     }
 
     std::cout << std::endl;
 }
 
+int sum_of_divisors(int x)
+{
+    if (memo[x] != 0) {
+        return memo[x];
+    }
+    auto divisors = get_divisors(x);
+    int sum = std::accumulate(divisors.begin(), divisors.end(), 0);
+
+    memo[x] = sum;
+
+    return sum;
+}
+
+
 std::vector<int> get_divisors(int x)
 {
     std::vector<int> divisors;
 
-    for(int i=1;i<x+1;i++) {
+    for(int i=1;i<x;i++) {
         if ((x % i) == 0) {
             divisors.push_back(i);
         }
