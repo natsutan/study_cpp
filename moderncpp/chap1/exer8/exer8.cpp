@@ -3,63 +3,34 @@
 //
 // 3桁のアームストロング数を出力する。
 #include <iostream>
-#include <vector>
-#include <numeric>
-#include <unordered_map>
+#include <sstream>
+#include <cmath>
 
-std::vector<int> get_divisors(int x);
-int sum_of_divisors(int x);
-void print_amicable(int x);
+void print_narcissistic();
 
-std::unordered_map<int, int> memo;
 
 int main(void)
 {
-    memo.clear();
-    print_amicable(1000000);
+    print_narcissistic();
 
 
     return 0;
 }
 
-void print_amicable(int x)
-{
-    for(int i=0;i<x;++i) {
-        int sum0 = sum_of_divisors(i);
-        int sum1 = sum_of_divisors(sum0);
-        //std::cout << i << "," << sum0 << "," << sum1 << std::endl;
+void print_narcissistic(){
+    std::ostringstream oss;
+    for(int x=100;x<1000;x++) {
+        int a = x % 10;
+        int b = (x / 10) % 10;
+        int c = (x / 100) % 10;
 
-        if((i == sum1) && (i != sum0) && (sum0 > sum1)) {
-            std::cout << "amicable! " << i << "," << sum0 << std::endl;
+        for(int n=1;n<4;++n) {
+            auto narc = std::pow(a, n) + std::pow(b, n) + std::pow(c, n);
+            if(narc == x) {
+                std::cout << "narcissistic:" << x << std::endl;
+                break;
+            }
         }
     }
-
-    std::cout << std::endl;
 }
 
-int sum_of_divisors(int x)
-{
-    if (memo[x] != 0) {
-        return memo[x];
-    }
-    auto divisors = get_divisors(x);
-    int sum = std::accumulate(divisors.begin(), divisors.end(), 0);
-
-    memo[x] = sum;
-
-    return sum;
-}
-
-
-std::vector<int> get_divisors(int x)
-{
-    std::vector<int> divisors;
-
-    for(int i=1;i<x;i++) {
-        if ((x % i) == 0) {
-            divisors.push_back(i);
-        }
-    }
-
-    return divisors;
-}
