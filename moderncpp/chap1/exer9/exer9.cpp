@@ -12,7 +12,7 @@ std::vector<int> prime_factorization(int x);
 
 int main(void)
 {
-    auto ret = prime_factorization(1000d);
+    auto ret = prime_factorization(1000);
 
     for(auto it = ret.begin();it!=ret.end();++it) {
         std::cout << *it << " ";
