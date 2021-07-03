@@ -9,5 +9,7 @@ add_subdirectory(exer7)
 add_subdirectory(exer8)
 add_subdirectory(exer9)
 add_subdirectory(exer10)
+add_subdirectory(exer11)
+add_subdirectory(exer12)
 
 
