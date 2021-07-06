@@ -2,66 +2,54 @@
 //12 最長コラッツ数列
 //100万までの数で、 最長コラッツ数列になる数とその数列の長さを求めるプログラムを書きなさい。
 #include <iostream>
-#include <vector>
-
-struct roman_pair {
-        int v;
-        std::string s;
-};
+#include <unordered_map>
 
 
-
-void print_roma(int x);
-std::vector<roman_pair> create_roman_table();
-
+long collatz_length (long x);
+long collatz(long x, int len);
+std::unordered_map<long, int> memo;
 
 int main(void)
 {
-    for(int i=0;i<110;++i) {
-        print_roma(i);
+    memo.clear();
+
+    int max_x = 0;
+    int max_len = 0;
+
+    for(long i=1;i<1000000;++i) {
+        auto len = collatz_length(i);
+        if (len > max_len) {
+            max_x = i;
+            max_len = len;
+        }
     }
 
+    std::cout << max_x << ":" << max_len << std::endl;
 
     return 0;
 }
 
-void print_roma(int x)
+long collatz_length (long x)
 {
-    auto roman_table = create_roman_table();
-    std::string s="";
-    auto roman_num = x;
+    auto len = collatz(x, 0);
+    memo[x] = len;
+    return len;
+}
 
-    for(auto it = roman_table.begin();it!=roman_table.end();++it) {
-        auto v = it->v;
-        int div = roman_num / v;
-        if (div > 0) {
-            for(int j=0;j<div;j++) {
-                s = s + it->s;
-            }
-            roman_num -= v * div;
-        }
+long collatz(long x, int len)
+{
+    auto cashed = memo[x];
+    if(cashed != 0) {
+        return len + cashed;
     }
 
-    std::cout << s << std::endl;
+    if(x == 1) {
+        return len + 1;
+    } else {
+        if((x%2) == 0) {
+            return collatz(x/2, len+1);
+        } else {
+            return collatz(3*x+1, len +1);
+        }
+    }
 }
-
-std::vector<roman_pair> create_roman_table()
-{
-    std::vector<roman_pair> table;
-    table.push_back({1000, "M"});
-    table.push_back({900, "CM"});
-    table.push_back({500, "D"});
-    table.push_back({400, "CD"});
-    table.push_back({100, "C"});
-    table.push_back({90, "XC"});
-    table.push_back({50, "L"});
-    table.push_back({40, "XL"});
-    table.push_back({10, "X"});
-    table.push_back({9, "IX"});
-    table.push_back({5, "V"});
-    table.push_back({4, "IV"});
-    table.push_back({1, "I"});
-
-    return table;
-}
-
