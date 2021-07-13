@@ -12,5 +12,6 @@ add_subdirectory(exer10)
 add_subdirectory(exer11)
 add_subdirectory(exer12)
 add_subdirectory(exer13)
+add_subdirectory(exer14)
 
 
