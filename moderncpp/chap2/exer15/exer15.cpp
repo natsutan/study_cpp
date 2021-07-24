@@ -21,10 +21,19 @@ public:
 };
 
 std::istream& operator>>(std::istream &is, IPAddress &ipa) {
-    ipa.adr[0] = 192;
-    ipa.adr[1] = 168;
-    ipa.adr[2] = 0;
-    ipa.adr[3] = 10;
+    char d1, d2, d3;
+    int b1, b2, b3, b4;
+    is >> b1 >> d1 >> b2 >> d2 >> b3 >> d3 >> b4;
+    if((d1=='.') && (d2=='.') && (d3=='.')) {
+        ipa.adr[0] = b1;
+        ipa.adr[1] = b2;
+        ipa.adr[2] = b3;
+        ipa.adr[3] = b4;
+
+    } else {
+        is.setstate(std::ios_base::failbit);
+    }
+
 
     return is;
 }
