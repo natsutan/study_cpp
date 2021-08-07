@@ -31,7 +31,7 @@ public:
     bool operator>(const IPAddress& rhs) const;
     bool operator<=(const IPAddress& rhs) const;
     bool operator>=(const IPAddress& rhs) const;
-
+    void operator++();
 };
 
 std::istream& operator>>(std::istream &is, IPAddress &ipa) {
@@ -107,13 +107,40 @@ bool IPAddress::operator<=(const IPAddress& rhs) const {
     return (*this == rhs) || (*this < rhs);
 }
 
+void IPAddress::operator++()  {
+    if(adr[3]!=255) {
+        ++adr[3];
+        return;
+    }
+    adr[3] = 0;
+    if(adr[2]!=0) {
+        ++adr[2];
+        return;
+    }
+    adr[2] = 0;
+    if(adr[1]!=0) {
+        ++adr[1];
+        return;
+    }
+    adr[1] = 0;
+    ++adr[0];
+
+
+}
 
 void op_test(void);
 
 int main(void)
 {
 
-    op_test();
+    IPAddress ipa = IPAddress(192, 168, 20, 3);
+    IPAddress ipb = IPAddress(192, 168, 22, 1);
+
+    //op_test();
+    for(auto adr=ipa;adr<ipb;++adr) {
+        std::cout << adr << std::endl;
+    }
+
     return 0;
 }
 
