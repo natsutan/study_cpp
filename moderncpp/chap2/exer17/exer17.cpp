@@ -2,9 +2,9 @@
 // Created by natu on 2021/06/22.
 //
 //17 基本演算を備えた2次元配列を作る
-//        要素へのアクセス（at()およびdata()）、 容量クエリ 、 イ テレータ、 フィ リ ング、 スワッ
-//        プと いったメ ソッドを備えた 2次元配列コンテナを表すクラステンプレート を書き なさ
-//い。 この型のオブジェクトをムーブできるよう にしなさい
+//        要素へのアクセス（at()およびdata()）、 容量クエリ 、 イテレータ、 フィリング、 スワッ
+//        プと いったメソッドを備えた 2次元配列コンテナを表すクラステンプレートを書きなさい。
+//        この型のオブジェクトをムーブできるよう にしなさい
 // https://ez-net.jp/article/BA/M8FWSt5L/uJoqEhJrMX1i/
 
 #include <iostream>
@@ -13,10 +13,10 @@
 #include <iostream>
 #include <iterator>
 
-template <typename T> class Cond2dIterator;
+template <typename T> class Con2dIterator;
 
 template <typename T> class Con2d {
-    friend Cond2dIterator<T>;
+    friend Con2dIterator<T>;
 
 public:
     int width(void) const { return _w;}
@@ -53,7 +53,7 @@ public:
         return _data[h][w];
     }
 
-    typedef Cond2dIterator<T> iterator;
+    typedef Con2dIterator<T> iterator;
     Con2d::iterator begin();
     Con2d::iterator end();
 
@@ -82,14 +82,49 @@ template <typename T> std::ostream& operator<<(std::ostream& os, const Con2d<T>&
 }
 
 
-template <typename T> class Cond2dIterator : public std::iterator<std::forward_iterator_tag, T> {
+template <typename T>
+class Con2dIterator : public std::iterator<std::forward_iterator_tag, T>
+{
     friend Con2d<T>;
+private:
+    size_t _h;
+    size_t _w;
+    Con2d<T> *_con2d;
+    //コンストラクタはプライベートに
+    Con2dIterator();
+    Con2dIterator(Con2d<T> *p, int index);
 
-            private:
-                size_t _h;
-                size_t _w;
-                Con2d<T> *_con2d;
-            };
+public:
+    //コピーコンストラクタはpublicに
+    Con2dIterator(const Con2dIterator& iterator);
+    Con2dIterator& operator++();
+    Con2dIterator operator++(Con2d<T>);
+    Con2d<T>& operator*();
+
+    bool operator==(const Con2dIterator& iterator);
+    bool operator!=(const Con2dIterator& iterator);
+};
+
+template<typename T>
+Con2dIterator<T>::Con2dIterator() {
+    _con2d = nullptr;
+    _h = 0;
+    _w = 0;
+}
+
+template<typename T>
+Con2dIterator<T>::Con2dIterator(Con2d<T> *p, int index) {
+    _con2d = p;
+    _h = (int)(index / (p->width()));
+    _w = index % (p->width());
+}
+
+template<typename T>
+Con2dIterator<T>::Con2dIterator(const Con2dIterator& iterator){
+    _con2d = iterator._con2d;
+    _w = iterator._w;
+    _h = iterator._h;
+}
 
 
 int main(void)
@@ -106,6 +141,8 @@ int main(void)
     std::cout << mat;
 
     std::cout << mat(0, 1) << std::endl;
+
+    //auto it = mat.begin();
 
     return 0;
 }
