@@ -15,6 +15,7 @@
 
 template <typename T> class Con2dIterator;
 
+
 template <typename T> class Con2d {
     friend Con2dIterator<T>;
 
@@ -65,6 +66,19 @@ private:
 
     //std::ostream& operator<<(std::ostream& os, const Con2d<T>& m);
 };
+
+
+template<typename T>
+typename Con2d<T>::iterator Con2d<T>::begin() {
+    return Con2dIterator(this, 0);
+}
+
+template<typename T>
+typename Con2d<T>::iterator Con2d<T>::end() {
+    int last = this->width() * this->height();
+    return Con2dIterator(this, last);
+}
+
 
 template <typename T> std::ostream& operator<<(std::ostream& os, const Con2d<T>& m)
 {
