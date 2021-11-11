@@ -15,7 +15,6 @@
 
 template <typename T> class Con2dIterator;
 
-
 template <typename T> class Con2d {
     friend Con2dIterator<T>;
 
@@ -75,7 +74,7 @@ typename Con2d<T>::iterator Con2d<T>::begin() {
 
 template<typename T>
 typename Con2d<T>::iterator Con2d<T>::end() {
-    int last = this->width() * this->height();
+    int last = this->_w * this->_h;
     return Con2dIterator(this, last);
 }
 
@@ -101,8 +100,8 @@ class Con2dIterator : public std::iterator<std::forward_iterator_tag, T>
 {
     friend Con2d<T>;
 private:
-    size_t _h;
-    size_t _w;
+    size_t _hi;
+    size_t _wi;
     Con2d<T> *_con2d;
     //コンストラクタはプライベートに
     Con2dIterator();
@@ -112,8 +111,8 @@ public:
     //コピーコンストラクタはpublicに
     Con2dIterator(const Con2dIterator& iterator);
     Con2dIterator& operator++();
-    Con2dIterator operator++(Con2d<T>);
-    Con2d<T>& operator*();
+    Con2dIterator operator++(int);
+    T& operator*();
 
     bool operator==(const Con2dIterator& iterator);
     bool operator!=(const Con2dIterator& iterator);
@@ -122,22 +121,60 @@ public:
 template<typename T>
 Con2dIterator<T>::Con2dIterator() {
     _con2d = nullptr;
-    _h = 0;
-    _w = 0;
+    _hi = 0;
+    _wi = 0;
 }
 
 template<typename T>
 Con2dIterator<T>::Con2dIterator(Con2d<T> *p, int index) {
     _con2d = p;
-    _h = (int)(index / (p->width()));
-    _w = index % (p->width());
+    _hi = (int)(index / ((*p)._w));
+    _wi = index % ((*p)._h);
 }
 
 template<typename T>
 Con2dIterator<T>::Con2dIterator(const Con2dIterator& iterator){
     _con2d = iterator._con2d;
-    _w = iterator._w;
-    _h = iterator._h;
+    _wi = iterator._wi;
+    _hi = iterator._hi;
+}
+
+template<typename T>
+bool Con2dIterator<T>::operator==(const Con2dIterator &iterator) {
+    if ((this->_hi == iterator._hi) && (this->_wi == iterator._wi)) {
+        return true;
+    }
+    return false;
+}
+
+template<typename T>
+bool Con2dIterator<T>::operator!=(const Con2dIterator &iterator) {
+    return !(*this == iterator);
+}
+
+template<typename T>
+Con2dIterator<T>& Con2dIterator<T>::operator++() {
+    auto w_max = (*_con2d)._w;
+    _wi = _wi + 1;
+    if(_wi == w_max) {
+        _hi++;
+        _wi = 0;
+    }
+    
+    return *this;
+}
+
+template<typename T>
+Con2dIterator<T> Con2dIterator<T>::operator++(int) {
+    Con2dIterator<T> result = *this;
+    ++result;
+
+    return result;
+}
+
+template<typename T>
+T &Con2dIterator<T>::operator*() {
+    return _con2d->_data[_hi][_wi];
 }
 
 
@@ -145,18 +182,16 @@ int main(void)
 {
     Con2d<int> mat(2, 3, 0);
 
-    std::cout << mat;
-    std::cout << mat.size() << std::endl;
-
     mat.fill(2);
-    std::cout << mat;
-
+    mat(0, 0) = -1;
     mat(0, 1) = 5;
+    mat(0, 2) = 3;
     std::cout << mat;
 
-    std::cout << mat(0, 1) << std::endl;
+    for(auto it=mat.begin();it!=mat.end();++it) {
+        std::cout << *it << std::endl;
+    }
 
-    //auto it = mat.begin();
 
     return 0;
 }
