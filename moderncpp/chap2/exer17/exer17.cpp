@@ -56,7 +56,7 @@ public:
     typedef Con2dIterator<T> iterator;
     Con2d::iterator begin();
     Con2d::iterator end();
-
+    void swap(Con2d<T> &x);
 
 private:
     int _w;
@@ -76,6 +76,21 @@ template<typename T>
 typename Con2d<T>::iterator Con2d<T>::end() {
     int last = this->_w * this->_h;
     return Con2dIterator(this, last);
+}
+
+template<typename T>
+void Con2d<T>::swap(Con2d<T> &x) {
+    if((_h != x._h) || (_w != x._w)) {
+        std::cerr << "size not matched" << std::endl;
+        return;
+    }
+
+    Con2d<T> tmp(_h, _w, _data[0][0]);
+    std::copy(this->begin(),this->end(), tmp.begin());
+    std::copy(x.begin(),x.end(), this->begin());
+    std::copy(tmp.begin(),tmp.end(), x.begin());
+
+    return;
 }
 
 
@@ -186,11 +201,19 @@ int main(void)
     mat(0, 0) = -1;
     mat(0, 1) = 5;
     mat(0, 2) = 3;
-    std::cout << mat;
+    std::cout << mat << std::endl;
 
-    for(auto it=mat.begin();it!=mat.end();++it) {
-        std::cout << *it << std::endl;
-    }
+
+    Con2d<int> b(2, 3, 0);
+    mat.swap(b);
+    std::cout << "SWAP" << std::endl;
+    std::cout << mat << std::endl;
+    std::cout << b << std::endl;
+
+    Con2d<int> c(std::move(b));
+    std::cout << "move" << std::endl;
+    std::cout << c << std::endl;
+//    std::cout << b << std::endl;
 
 
     return 0;
