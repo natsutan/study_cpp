@@ -7,12 +7,42 @@
 
 #include <iostream>
 #include <numeric>
+#include <vector>
+
+template <typename T> void super_pb(std::vector<T> &v, T x);
+template<typename T, typename ... Types> void super_pb(std::vector<T> &v, T x, Types... xs);
+
+template <typename T> void super_pb(std::vector<T> &v, T x)
+{
+    v.push_back(x);
+}
+
+template<typename T, typename ... Types> void super_pb(std::vector<T> &v, T x, Types... xs)
+{
+    v.push_back(x);
+    super_pb(v, xs...);
+}
+
+template<typename C, typename ... Types> void super_pb2(C &v, Types&&... xs);
+
+template<typename C, typename ... Types> void super_pb2(C &v, Types&&... xs)
+{
+    (v.push_back(xs), ...);
+}
+
 
 int main(void)
 {
-    auto lcm_ret = std::lcm(80, 60);
+    std::vector<int> v;
+    v.push_back(0);
+    v.push_back(1);
+    super_pb(v, 2);
+    super_pb(v, 3, 4, 5);
+    super_pb2(v, 6, 7, 8);
 
-    std::cout << lcm_ret << std::endl;
+    for(auto it=v.begin();it!=v.end();++it) {
+        std::cout << *it << std::endl;
+    }
 
     return 0;
 }
