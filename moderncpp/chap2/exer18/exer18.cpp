@@ -9,11 +9,25 @@
 #include <iostream>
 #include <numeric>
 
+template <typename T> auto min_t(T x);
+template<typename T, typename ... Types> auto min_t(T x, Types... xs);
+
+template <typename T> auto min_t(T x)
+{
+    return x;
+}
+
+template<typename T, typename ... Types>
+auto min_t(T x, Types... xs) {
+    T tmp = min_t(xs...);
+    return (x < tmp) ? x : tmp;
+}
+
+
 int main(void)
 {
-    auto lcm_ret = std::lcm(80, 60);
-
-    std::cout << lcm_ret << std::endl;
+    std::cout << min_t(3.0, 5.0, 2.0 , 6.0) << std::endl;
+    std::cout << min_t('c', 'a', 'd') << std::endl;
 
     return 0;
 }
